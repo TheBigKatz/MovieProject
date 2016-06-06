@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="angular.js"></script>
+  <script src="angular-route.js"></script>
+  <script src="movie-app.js"></script>
+</head>
+<script>
+var app = angular.module('my-app', ['ngRoute']);
+app.config(function($routeProvider) {
+  $routeProvider
+  .when('/', {
+    controller: 'MainController',
+    templateUrl: 'main.html'
+  })
+  .when('/:movieId', {
+    controller: 'DetailsController',
+    templateUrl: 'details.html'
+  })
+});
+
+app.controller('MainController', function($scope, $http) {
+  $http.get('http://api.themoviedb.org/3/movie/now_playing?api_key=fec8b5ab27b292a68294261bb21b04a5')
+  .success(function(response) {
+    $scope.movies = response.results;
+  });
+});
+
+app.controller('DetailsController', function($scope, $routeParams, $http) {
+  var id = $routeParams.movieId;
+  $scope.movieId = $routeParams.movieId;
+  $http.get('http://api.themoviedb.org/3/movie/')
+});
+</script>
+<body ng-app="my-app">
+  <ng-view></ng-view>
+</body>
+</html>
